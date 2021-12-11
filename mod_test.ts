@@ -7,7 +7,7 @@ await Deno.test({
   name: "Hello World",
   async fn() {
     console.log("\n");
-    await interpreter.exec(`++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.`);
+    await interpreter.execute(`++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.`);
     assertEquals(interpreter.outputs, "Hello World!\n".split(""));
     console.log(interpreter.outputs.join(""));
   }
