@@ -1,5 +1,6 @@
 import Node from "./Node.ts";
 import Type from "./Type.ts";
+import promosify from "./promisify.ts";
 
 export default class Interpreter {
   buffer: Uint32Array = new Uint32Array(1);
@@ -27,90 +28,86 @@ export default class Interpreter {
 
     const clones = nodes.slice();
 
-    return new Promise(($: Function, _: Function) => {
-      setTimeout(async () => {
-        const nodes = clones;
+    return promosify<void>(async () => {
+      const nodes = clones;
 
-        while (nodes.length) {
-          const node = nodes.shift() as Node;
+      while (nodes.length) {
+        const node = nodes.shift() as Node;
 
-          switch (node.type) {
-            case Type["+"]: {
-              this.increment();
+        switch (node.type) {
+          case Type["+"]: {
+            this.increment();
 
-              break;
-            }
-            case Type["-"]: {
-              this.decrement();
-
-              break;
-            }
-            case Type[">"]: {
-              this.next();
-
-              break;
-            }
-            case Type["<"]: {
-              this.previous();
-
-              break;
-            }
-            case Type[","]: {
-              this.input();
-
-              break;
-            }
-            case Type["."]: {
-              this.output();
-
-              break;
-            }
-            case Type["["]: {
-              const hold: Node[] = [];
-              let counter = 1;
-
-              while (nodes.length && counter) {
-                const node = nodes.shift() as Node;
-
-                switch (node.type) {
-                  case Type["+"]:
-                  case Type["-"]:
-                  case Type["<"]:
-                  case Type[">"]: {
-                    hold.push(node);
-
-                    break;
-                  }
-                  case Type["["]: {
-                    counter++;
-
-                    hold.push(node);
-
-                    break;
-                  }
-                  case Type["]"]: {
-                    if (--counter) hold.push(node);
-
-                    break;
-                  }
-                  case Type.Unknown: break;
-                }
-              }
-
-              if (counter) _(Error(`Unexpected end of line`));
-
-              await this.loop(hold);
-
-              break;
-            }
-            case Type["]"]: _(Error(`Unexpected token ]`));
-            case Type.Unknown: break;
-            default: _(Error(`${node.type} is not a valid node type`));
+            break;
           }
-        }
+          case Type["-"]: {
+            this.decrement();
 
-        $();
-      });
+            break;
+          }
+          case Type[">"]: {
+            this.next();
+
+            break;
+          }
+          case Type["<"]: {
+            this.previous();
+
+            break;
+          }
+          case Type[","]: {
+            this.input();
+
+            break;
+          }
+          case Type["."]: {
+            this.output();
+
+            break;
+          }
+          case Type["["]: {
+            const hold: Node[] = [];
+            let counter = 1;
+
+            while (nodes.length && counter) {
+              const node = nodes.shift() as Node;
+
+              switch (node.type) {
+                case Type["+"]:
+                case Type["-"]:
+                case Type["<"]:
+                case Type[">"]: {
+                  hold.push(node);
+
+                  break;
+                }
+                case Type["["]: {
+                  counter++;
+
+                  hold.push(node);
+
+                  break;
+                }
+                case Type["]"]: {
+                  if (--counter) hold.push(node);
+
+                  break;
+                }
+                case Type.Unknown: break;
+              }
+            }
+
+            if (counter) throw new Error(`Unexpected end of line`);
+
+            await this.loop(hold);
+
+            break;
+          }
+          case Type["]"]: throw new Error(`Unexpected token ]`);
+          case Type.Unknown: break;
+          default: throw new Error(`${node.type} is not a valid node type`);
+        }
+      }
     });
   }
   increaseBuffer(length = 1): void {
