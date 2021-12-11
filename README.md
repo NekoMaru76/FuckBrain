@@ -23,5 +23,5 @@ I also added CLI file (index.ts), you could check the usage with `deno run https
 [MIT](https://choosealicense.com/licenses/mit/)
 
 ## Author
-Discord: Sx | Stupid#9524
+Discord: Sx | Stupid#9524\n
 GitHub: NekoMaru76
