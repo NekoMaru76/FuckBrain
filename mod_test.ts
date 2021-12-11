@@ -1,7 +1,7 @@
 import { Interpreter } from "./mod.ts";
 import { assertEquals } from "https://deno.land/std@0.117.0/testing/asserts.ts";
 
-const interpreter = new Interpreter(() => "1");
+const interpreter = new Interpreter((): string => "1");
 
 await Deno.test({
   name: "Hello World",

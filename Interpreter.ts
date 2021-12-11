@@ -148,7 +148,12 @@ export default class Interpreter {
     if (this.debug) console.log(`Decreased buffer position ${this.pointer} from ${v} to ${this.buffer[this.pointer]}`);
   }
   async input(): Promise<number> {
-    return await this.onInput().charCodeAt(0);
+    const input: string | number = await this.onInput();
+
+    switch (typeof input) {
+      case "string": return input.charCodeAt(0);
+      case "number": return input;
+    }
   }
   output(): void {
     const { outputs, buffer, pointer } = this;
