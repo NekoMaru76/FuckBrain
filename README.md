@@ -1,9 +1,9 @@
-# BrainFuck.js
+# FuckBrain
 Another BrainFuck interpreter written in JavaScript for Deno.
 
 ## Usage
 ```ts
-import { Interpreter } from "https://deno.land/x/fuckbrain";
+import { Interpreter } from "https://deno.land/x/fuckbrain/mod.ts";
 
 const code = `++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.`;
 const debug = false;
