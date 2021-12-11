@@ -1,14 +1,26 @@
 import { Interpreter } from "./mod.ts";
 import { assertEquals } from "https://deno.land/std@0.117.0/testing/asserts.ts";
 
-const interpreter = new Interpreter((): string => "1");
+const debug = false;
+const onInput = (): string | number => "R";
+const TypedArray = Uint8Array;
+const interpreter = new Interpreter({
+  onInput, debug, TypedArray
+});
 
 await Deno.test({
   name: "Hello World",
   async fn() {
-    console.log("\n");
     await interpreter.execute(`++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.`);
     assertEquals(interpreter.outputs, "Hello World!\n".split(""));
-    console.log(interpreter.outputs.join(""));
+  }
+});
+
+await Deno.test({
+  name: "Size Limit",
+  async fn() {
+    interpreter.reset();
+    await interpreter.execute(`-.+.`);
+    assertEquals(interpreter.outputs, [String.fromCharCode(255), String.fromCharCode(0)]);
   }
 });

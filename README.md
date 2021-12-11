@@ -7,10 +7,10 @@ import { Interpreter } from "https://deno.land/x/fuckbrain/mod.ts";
 
 const code = `++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.`;
 const debug = false;
-const sizeLimit = 255;
 const onInput = (): string | number => "R";
+const TypedArray = Uint8Array;
 const interpreter = new Interpreter({
-  onInput, debug, sizeLimit
+  onInput, debug, TypedArray
 });
 
 await interpreter.execute(code);

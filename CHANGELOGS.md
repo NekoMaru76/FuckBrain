@@ -20,4 +20,9 @@
 + Fixed mod.ts version.
 
 ## v1.6
-+ Added `sizeLimit` and changed arguments of `Interpreter`.
++ Added `sizeLimit`
++ Changed arguments of `Interpreter`.
+
+## v1.7
+- Removed `sizeLimit`.
++ Added `TypedArray` (Int8Array | Uint8Array | Uint8ClampedArray | Int16Array | Uint16Array | Uint32Array).

@@ -2,26 +2,38 @@ import Node from "./Node.ts";
 import Type from "./Type.ts";
 import promosify from "./promisify.ts";
 
+type TypedArray = Int8Array | Uint8Array | Uint8ClampedArray | Int16Array | Uint16Array | Uint32Array;
+
+interface Inside {
+  new(length: number): TypedArray,
+  new(array: number[]): TypedArray
+};
 interface Options {
   onInput: Function;
   debug: boolean;
-  sizeLimit: number;
+  TypedArray: Inside;
 };
 
 export default class Interpreter {
-  buffer: Uint32Array = new Uint32Array(1);
+  buffer: TypedArray;
   pointer: number = 0;
+  outputs: string[] = [];
   onInput: Function;
   debug: boolean;
-  outputs: string[] = [];
-  sizeLimit: number;
+  TypedArray: Inside;
 
   constructor({
-    onInput, debug = false, sizeLimit = 255
+    onInput, debug = false, TypedArray
   }: Options) {
     this.onInput = onInput;
-    this.sizeLimit = sizeLimit;
+    this.TypedArray = TypedArray;
     this.debug = debug;
+    this.buffer = new this.TypedArray(1);
+  }
+  reset(): void {
+    this.outputs = [];
+    this.buffer = new this.TypedArray(1);
+    this.pointer = 0;
   }
   execute(code: string): Promise<void> {
     return this.run(this.lexer(code));
@@ -121,7 +133,7 @@ export default class Interpreter {
     });
   }
   increaseBuffer(length = 1): void {
-    this.buffer = new Uint32Array([...Array.from(this.buffer), ...Array(length).fill(0)]);
+    this.buffer = new this.TypedArray([...Array.from(this.buffer), ...Array(length).fill(0)]);
 
     if (this.debug) console.log(`Increased buffer length to ${this.buffer.length}`);
   }
@@ -145,16 +157,14 @@ export default class Interpreter {
 
     this.buffer[this.pointer]++;
 
-    if (this.buffer[this.pointer] > this.sizeLimit) this.buffer[this.pointer] = 0;
-    if (this.debug) console.log(`Increased buffer position ${this.pointer} from ${v} to ${this.buffer[this.pointer]}`);
+    if (this.debug) console.log(`Increased cell #${this.pointer} value from ${v} to ${this.buffer[this.pointer]}`);
   }
   decrement(): void {
     const v = this.buffer[this.pointer];
 
     this.buffer[this.pointer]--;
 
-    if (this.buffer[this.pointer] < 0) this.buffer[this.pointer] = this.sizeLimit;
-    if (this.debug) console.log(`Decreased buffer position ${this.pointer} from ${v} to ${this.buffer[this.pointer]}`);
+    if (this.debug) console.log(`Decreased cell #${this.pointer} value from ${v} to ${this.buffer[this.pointer]}`);
   }
   async input(): Promise<number> {
     const input: string | number = await this.onInput();
