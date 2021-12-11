@@ -7,8 +7,11 @@ import { Interpreter } from "https://deno.land/x/fuckbrain/mod.ts";
 
 const code = `++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.`;
 const debug = false;
+const sizeLimit = 255;
 const onInput = (): string | number => "R";
-const interpreter = new Interpreter(onInput, debug);
+const interpreter = new Interpreter({
+  onInput, debug, sizeLimit
+});
 
 await interpreter.execute(code);
 console.log(interpreter.outputs.join("")); //Hello World!

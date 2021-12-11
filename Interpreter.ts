@@ -2,15 +2,25 @@ import Node from "./Node.ts";
 import Type from "./Type.ts";
 import promosify from "./promisify.ts";
 
+interface Options {
+  onInput: Function;
+  debug: boolean;
+  sizeLimit: number;
+};
+
 export default class Interpreter {
   buffer: Uint32Array = new Uint32Array(1);
   pointer: number = 0;
   onInput: Function;
   debug: boolean;
   outputs: string[] = [];
+  sizeLimit: number;
 
-  constructor(onInput: Function, debug: boolean = false) {
+  constructor({
+    onInput, debug = false, sizeLimit = 255
+  }: Options) {
     this.onInput = onInput;
+    this.sizeLimit = sizeLimit;
     this.debug = debug;
   }
   execute(code: string): Promise<void> {
@@ -135,6 +145,7 @@ export default class Interpreter {
 
     this.buffer[this.pointer]++;
 
+    if (this.buffer[this.pointer] > this.sizeLimit) this.buffer[this.pointer] = 0;
     if (this.debug) console.log(`Increased buffer position ${this.pointer} from ${v} to ${this.buffer[this.pointer]}`);
   }
   decrement(): void {
@@ -142,6 +153,7 @@ export default class Interpreter {
 
     this.buffer[this.pointer]--;
 
+    if (this.buffer[this.pointer] < 0) this.buffer[this.pointer] = this.sizeLimit;
     if (this.debug) console.log(`Decreased buffer position ${this.pointer} from ${v} to ${this.buffer[this.pointer]}`);
   }
   async input(): Promise<number> {

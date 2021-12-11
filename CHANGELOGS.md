@@ -16,5 +16,8 @@
 + Loop won't crash due to infinity iteration now.
 
 ## v1.5
-+ Updated CHANGELOGS.md symbols.
++ Updated CHANGELOGS.md.
 + Fixed mod.ts version.
+
+## v1.6
++ Added `sizeLimit` and changed arguments of `Interpreter`.
