@@ -1,8 +1,7 @@
 import Node from "./Node.ts";
 import Type from "./Type.ts";
 import promosify from "./promisify.ts";
-
-type TypedArray = Int8Array | Uint8Array | Uint8ClampedArray | Int16Array | Uint16Array | Uint32Array;
+import { TypedArray } from "./Types.d.ts";
 
 interface Inside {
   new(length: number): TypedArray,
@@ -166,7 +165,7 @@ export default class Interpreter {
 
     if (this.debug) console.log(`Decreased cell #${this.pointer} value from ${v} to ${this.buffer[this.pointer]}`);
   }
-  async input(): Promise<number> {
+  async input(): Promise<void> {
     const input: string | number = await this.onInput();
     let result: number = 0;
 

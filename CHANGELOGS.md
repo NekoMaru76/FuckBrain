@@ -29,3 +29,7 @@
 
 ## v1.8
 + Fixed `input`.
+
+## v1.9
++ Fixed `input`.
++ Added `Types.d.ts`.
