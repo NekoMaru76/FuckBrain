@@ -168,11 +168,14 @@ export default class Interpreter {
   }
   async input(): Promise<number> {
     const input: string | number = await this.onInput();
+    let result: number = 0;
 
     switch (typeof input) {
-      case "string": return input.charCodeAt(0);
-      case "number": return input;
+      case "string": result = input.charCodeAt(0); break;
+      case "number": result = input; break;
     }
+
+    this.buffer[this.pointer] = result;
   }
   output(): void {
     const { outputs, buffer, pointer } = this;

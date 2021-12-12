@@ -26,3 +26,6 @@
 ## v1.7
 - Removed `sizeLimit`.
 + Added `TypedArray` (Int8Array | Uint8Array | Uint8ClampedArray | Int16Array | Uint16Array | Uint32Array).
+
+## v1.8
++ Fixed `input`.
